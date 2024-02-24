@@ -1,0 +1,63 @@
+---
+- name: Populate service facts
+  service_facts:
+- name: Install Git
+  apt:
+    name: git
+    state: present
+  become: true
+- name: Install python3
+  apt:
+    name: python3-venv
+    state: present
+  become: true
+- name: Checkout whyoming-satellite
+  ansible.builtin.git:
+    repo: "https://github.com/rhasspy/wyoming-satellite.git"
+    dest: "{{ wyoming_satellite_dir }}"
+- name: Install respeaker drivers
+  command: "bash etc/install-respeaker-drivers.sh"
+  when: ansible_facts.services["seeed-voicecard.service"] is not defined
+  become: true
+  args:
+    chdir: "{{ wyoming_satellite_dir }}"
+  notify: Reboot
+- name: Flush handlers
+  meta: flush_handlers
+- name: Install wyoming satellite and requirements
+  ansible.builtin.pip:
+    virtualenv: "{{ wyoming_satellite_dir }}/.venv/"
+    virtualenv_site_packages: yes
+    virtualenv_command: python -m venv
+    requirements: requirements.txt
+    extra_args: -f https://synesthesiam.github.io/prebuilt-apps/
+  args:
+    chdir: "{{ wyoming_satellite_dir }}"
+- name: Install audio enhancements requirements
+  ansible.builtin.pip:
+    virtualenv: "{{ wyoming_satellite_dir }}/.venv/"
+    virtualenv_site_packages: yes
+    virtualenv_command: python -m venv
+    requirements: requirements_audio_enhancement.txt 
+  args:
+    chdir: "{{ wyoming_satellite_dir }}"
+- name: Install voice activity detector
+  ansible.builtin.pip:
+    virtualenv: "{{ wyoming_satellite_dir }}/.venv/"
+    virtualenv_site_packages: yes
+    virtualenv_command: python -m venv
+    requirements: requirements_vad.txt
+  args:
+    chdir: "{{ wyoming_satellite_dir }}"
+- name: Create wyoming satellite systemd service file
+  become: true
+  template:
+    src: templates/wyoming-satellite.service.j2
+    dest: /lib/systemd/system/wyoming-satellite.service
+  notify:
+    - Restart wyoming satellite
+- name: Start wyoming satellite service
+  become: true
+  systemd:
+    name: wyoming-satellite
+    state: started

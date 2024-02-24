@@ -1,0 +1,10 @@
+---
+- name: Restart wyoming satellite
+  become: true
+  ansible.builtin.service:
+    name: wyoming-satellite
+    daemon_reload: true
+    state: restarted
+- name: Reboot
+  become: true
+  reboot:

@@ -1,0 +1,14 @@
+[Unit]
+Description={{ service_description }}
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart={{ wyoming_satellite_dir }}/script/run --name '{{ satellite_name }}' --uri 'tcp://0.0.0.0:10700' --mic-command '{{ mic_command }}' --snd-command '{{ snd_command }}'
+WorkingDirectory={{ wyoming_satellite_dir }}
+Restart=always
+RestartSec=1
+
+[Install]
+WantedBy=default.target

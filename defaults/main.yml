@@ -1,0 +1,7 @@
+---
+user: "{{ ansible_user_id }}"
+service_description: Wyoming Satellite
+wyoming_satellite_dir: "/home/{{ user }}/wyoming-satellite"
+mic_command: "arecord -D plughw:CARD=seeed2micvoicec,DEV=0 -r 16000 -c 1 -f S16_LE -t raw"
+snd_command: "aplay -D plughw:CARD=seeed2micvoicec,DEV=0 -r 22050 -c 1 -f S16_LE -t raw"
+satellite_name: Wyoming Satellite

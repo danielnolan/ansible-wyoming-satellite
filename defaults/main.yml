@@ -2,9 +2,7 @@
 mic_auto_gain: 5
 mic_command: "arecord -D plughw:CARD=seeed2micvoicec,DEV=0 -r 16000 -c 1 -f S16_LE -t raw"
 mic_noise_suppression: 2
-openwakeword_service_description: Wyoming openWakeWord
 satellite_name: Wyoming Satellite
-service_description: Wyoming Satellite
 snd_command: "aplay -D plughw:CARD=seeed2micvoicec,DEV=0 -r 22050 -c 1 -f S16_LE -t raw"
 user: "{{ ansible_user_id }}"
 wyoming_openwakeword_dir: "/home/{{ user }}/wyoming-openwakeword"

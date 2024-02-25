@@ -1,24 +1,36 @@
 ---
 - name: Populate service facts
   service_facts:
-- name: Install Git
+- name: Install system dependencies
   become: true
   apt:
-    name: git
+    name: 
+      - git
+      - libopenblas-dev 
+      - python3-venv
+      - python3-spidev
+      - python3-gpiozero
     state: present
-- name: Install python3
-  become: true
-  apt:
-    name: python3-venv
-    state: present
-- name: Install slibopenblas-dev
-  become: true 
-  apt: 
-    name: libopenblas-dev 
+
+- name: Checkout whyoming-satellite
+  ansible.builtin.git:
+    repo: https://github.com/rhasspy/wyoming-satellite.git
+    dest: "{{ wyoming_satellite_dir }}"
 - name: Checkout wyoming-open-wakeword
   ansible.builtin.git:
     repo: https://github.com/rhasspy/wyoming-openwakeword.git
     dest: "{{ wyoming_openwakeword_dir }}"
+
+- name: Install respeaker drivers
+  become: true
+  command: bash etc/install-respeaker-drivers.sh
+  when: ansible_facts.services["seeed-voicecard.service"] is not defined
+  args:
+    chdir: "{{ wyoming_satellite_dir }}"
+  notify: Reboot
+- name: Flush handlers
+  meta: flush_handlers
+
 - name: Install wyoming openwakeword
   command: script/setup
   args:
@@ -34,19 +46,26 @@
   systemd:
     name: wyoming-openwakeword
     state: started
-- name: Checkout whyoming-satellite
-  ansible.builtin.git:
-    repo: https://github.com/rhasspy/wyoming-satellite.git
-    dest: "{{ wyoming_satellite_dir }}"
-- name: Install respeaker drivers
-  become: true
-  command: bash etc/install-respeaker-drivers.sh
-  when: ansible_facts.services["seeed-voicecard.service"] is not defined
+
+- name: Install led service
+  ansible.builtin.pip:
+    name: wyoming==1.5.2
+    virtualenv: "{{ wyoming_satellite_dir }}/examples/.venv/"
+    virtualenv_site_packages: yes
+    virtualenv_command: python -m venv
   args:
-    chdir: "{{ wyoming_satellite_dir }}"
-  notify: Reboot
-- name: Flush handlers
-  meta: flush_handlers
+    chdir: "{{ wyoming_satellite_dir }}/examples"
+- name: Create led systemd service file
+  become: true
+  template:
+    src: templates/2mic_leds.service.j2
+    dest: /lib/systemd/system/2mic_leds.service
+- name: Start led service
+  become: true
+  systemd:
+    name: 2mic_leds
+    state: started
+
 - name: Install wyoming satellite and requirements
   ansible.builtin.pip:
     virtualenv: "{{ wyoming_satellite_dir }}/.venv/"
@@ -79,8 +98,3 @@
     dest: /lib/systemd/system/wyoming-satellite.service
   notify:
     - Restart wyoming satellite
-- name: Start wyoming satellite service
-  become: true
-  systemd:
-    name: wyoming-satellite
-    state: started

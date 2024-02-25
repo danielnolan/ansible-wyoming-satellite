@@ -2,10 +2,18 @@
 Description={{ service_description }}
 Wants=network-online.target
 After=network-online.target
+Requires=wyoming-openwakeword.service
 
 [Service]
 Type=simple
-ExecStart={{ wyoming_satellite_dir }}/script/run --name '{{ satellite_name }}' --uri 'tcp://0.0.0.0:10700' --mic-command '{{ mic_command }}' --snd-command '{{ snd_command }}'
+ExecStart={{ wyoming_satellite_dir }}/script/run --name '{{ satellite_name }}' \
+  --uri 'tcp://0.0.0.0:10700' \
+  --mic-command '{{ mic_command }}' \
+  --mic-auto-gain {{ mic_auto_gain }} \
+  --mic-noise-suppression {{ mic_noise_suppression }} \
+  --snd-command '{{ snd_command }}' \
+  --wake-uri 'tcp://127.0.0.1:10400' \
+  --wake-word-name '{{ wake_word }}'
 WorkingDirectory={{ wyoming_satellite_dir }}
 Restart=always
 RestartSec=1

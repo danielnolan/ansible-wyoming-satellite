@@ -2,23 +2,46 @@
 - name: Populate service facts
   service_facts:
 - name: Install Git
+  become: true
   apt:
     name: git
     state: present
-  become: true
 - name: Install python3
+  become: true
   apt:
     name: python3-venv
     state: present
+- name: Install slibopenblas-dev
+  become: true 
+  apt: 
+    name: libopenblas-dev 
+- name: Checkout wyoming-open-wakeword
+  ansible.builtin.git:
+    repo: https://github.com/rhasspy/wyoming-openwakeword.git
+    dest: "{{ wyoming_openwakeword_dir }}"
+- name: Install wyoming openwakeword
+  command: script/setup
+  args:
+    chdir: "{{ wyoming_openwakeword_dir }}"
+  when: ansible_facts.services["wyoming-openwakeword.service"] is not defined
+- name: Create wyoming openwakeword systemd service file
   become: true
+  template:
+    src: templates/wyoming-openwakeword.service.j2
+    dest: /lib/systemd/system/wyoming-openwakeword.service
+- name: Start wyoming openwakeword service
+  become: true
+  systemd:
+    name: wyoming-openwakeword
+    state: started
 - name: Checkout whyoming-satellite
   ansible.builtin.git:
-    repo: "https://github.com/rhasspy/wyoming-satellite.git"
+    repo: https://github.com/rhasspy/wyoming-satellite.git
     dest: "{{ wyoming_satellite_dir }}"
 - name: Install respeaker drivers
-  command: "bash etc/install-respeaker-drivers.sh"
-  when: ansible_facts.services["seeed-voicecard.service"] is not defined
   become: true
+  command: bash etc/install-respeaker-drivers.sh
+  when: ansible_facts.services["seeed-voicecard.service"] is not defined
   args:
     chdir: "{{ wyoming_satellite_dir }}"
   notify: Reboot
@@ -41,7 +64,7 @@
     requirements: requirements_audio_enhancement.txt 
   args:
     chdir: "{{ wyoming_satellite_dir }}"
-- name: Install voice activity detector
+- name: Install voice activity detector requirements
   ansible.builtin.pip:
     virtualenv: "{{ wyoming_satellite_dir }}/.venv/"
     virtualenv_site_packages: yes

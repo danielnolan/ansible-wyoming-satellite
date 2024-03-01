@@ -32,7 +32,7 @@ Including an example of how to use your role (for instance, with variables passe
 
     - hosts: satellites
       roles:
-         - { role: whyoming-satelltie, mic_auto_gain: 5 }
+         - { role: wyoming-satellite, mic_auto_gain: 5 }
 
 License
 -------
@@ -42,4 +42,4 @@ BSD
 Author Information
 ------------------
 
-Daniel Nolan danielanolan@gmail.com
+Daniel Nolan https://danielnolan.com

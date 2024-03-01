@@ -6,7 +6,7 @@
     daemon_reload: true
     enabled: true
     state: restarted
-- name: Restart wyoming openwakeword service
+- name: Restart wyoming openwakeword
   become: true
   ansible.builtin.systemd_service:
     name: wyoming-openwakeword

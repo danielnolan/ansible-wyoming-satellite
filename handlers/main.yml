@@ -4,15 +4,15 @@
   ansible.builtin.systemd_service:
     name: wyoming-satellite
     daemon_reload: true
-    state: restarted
     enabled: true
+    state: restarted
 - name: Restart wyoming openwakeword service
   become: true
   ansible.builtin.systemd_service:
     name: wyoming-openwakeword
     daemon_reload: true
-    enabled: restarted
-    state: started
+    enabled: true
+    state: restarted
 - name: Restart led service
   become: true
   ansible.builtin.systemd_service:

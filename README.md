@@ -1,4 +1,4 @@
-Wyoming Satellite
+Ansible Wyoming Satellite Role
 =========
 
  This is an ansible role for building a wyoming satellite based on this

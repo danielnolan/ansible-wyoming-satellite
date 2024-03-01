@@ -1,5 +1,5 @@
 ---
-mic_auto_gain: 5
+mic_auto_gain: 4
 mic_command: "arecord -D plughw:CARD=seeed2micvoicec,DEV=0 -r 16000 -c 1 -f S16_LE -t raw"
 mic_noise_suppression: 2
 satellite_name: Wyoming Satellite

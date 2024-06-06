@@ -18,7 +18,8 @@ ExecStart={{ wyoming_satellite_dir }}/script/run --name '{{ satellite_name }}' \
   --wake-word-name '{{ wake_word }}' \
   --event-uri 'tcp://127.0.0.1:10500' \
   --awake-wav {{ wyoming_satellite_dir }}/sounds/awake.wav \
-  --done-wav {{ wyoming_satellite_dir }}/sounds/done.wav
+  --done-wav {{ wyoming_satellite_dir }}/sounds/done.wav \
+  --timer-finished-wav {{ wyoming_satellite_dir }}/sounds/timer_finished.wav
 
 WorkingDirectory={{ wyoming_satellite_dir }}
 Restart=always

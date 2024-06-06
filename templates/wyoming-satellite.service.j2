@@ -12,7 +12,7 @@ ExecStart={{ wyoming_satellite_dir }}/script/run --name '{{ satellite_name }}' \
   --mic-command '{{ mic_command }}' \
   --mic-auto-gain {{ mic_auto_gain }} \
   --mic-noise-suppression {{ mic_noise_suppression }} \
-  --mic-volume {{ mic_volume }} \
+  --mic-volume-multiplier {{ mic_volume_multiplier }} \
   --snd-command '{{ snd_command }}' \
   --wake-uri 'tcp://127.0.0.1:10400' \
   --wake-word-name '{{ wake_word }}' \

@@ -2,7 +2,7 @@
 mic_auto_gain: 5
 mic_command: "arecord -D plughw:CARD=seeed2micvoicec,DEV=0 -r 16000 -c 1 -f S16_LE -t raw"
 mic_noise_suppression: 2
-mic_volume: 1
+mic_volume_multiplier: 1
 threshold: 0.9
 satellite_name: Wyoming Satellite
 snd_command: "aplay -D plughw:CARD=seeed2micvoicec,DEV=0 -r 22050 -c 1 -f S16_LE -t raw"

@@ -17,9 +17,11 @@ vars or passed in from your playbook when using this role.
 mic_auto_gain: 4
 mic_command: "arecord -D plughw:CARD=seeed2micvoicec,DEV=0 -r 16000 -c 1 -f S16_LE -t raw"
 mic_noise_suppression: 2
+mic_volume: 1
 satellite_name: Wyoming Satellite
 snd_command: "aplay -D plughw:CARD=seeed2micvoicec,DEV=0 -r 22050 -c 1 -f S16_LE -t raw"
 user: "{{ ansible_user_id }}"
+threshold: 0.9
 wyoming_openwakeword_dir: "/home/{{ user }}/wyoming-openwakeword"
 wyoming_satellite_dir: "/home/{{ user }}/wyoming-satellite"
 wake_word: "hey jarvis"

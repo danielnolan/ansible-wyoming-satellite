@@ -12,14 +12,19 @@
       - python3-gpiozero
     state: present
 
-- name: Checkout whyoming-satellite
+- name: Checkout wyoming-satellite
   ansible.builtin.git:
     repo: https://github.com/rhasspy/wyoming-satellite.git
     dest: "{{ wyoming_satellite_dir }}"
 - name: Checkout wyoming-open-wakeword
   ansible.builtin.git:
-    repo: https://github.com/rhasspy/wyoming-openwakeword.git
+    repo: https://github.com/j5bart/wyoming-openwakeword.git
     dest: "{{ wyoming_openwakeword_dir }}"
+    version: patch-1
+- name: Checkout open-wakeword models
+  ansible.builtin.git:
+    repo: https://github.com/fwartner/home-assistant-wakewords-collection
+    dest: "{{ wyoming_openwakeword_dir }}/custom_models"
 
 - name: Install respeaker drivers
   become: true

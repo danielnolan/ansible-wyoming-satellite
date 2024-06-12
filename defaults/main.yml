@@ -9,4 +9,5 @@ snd_command: "aplay -D plughw:CARD=seeed2micvoicec,DEV=0 -r 22050 -c 1 -f S16_LE
 user: "{{ ansible_user_id }}"
 wyoming_openwakeword_dir: "/home/{{ user }}/wyoming-openwakeword"
 wyoming_satellite_dir: "/home/{{ user }}/wyoming-satellite"
-wake_word: "ok nabu"
+wake_word: "javis_v2"
+custom_model_dir: "jarvis"
